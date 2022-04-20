@@ -1,5 +1,9 @@
 # KAS-Racial-Disparities
 
+Code used for analyses in manuscript "Racial Disparities in Pediatric Kidney Transplantation under the New Kidney Allocation System in the United States" 
+
+Due to our DUA, we are unable to share our dataset used in the analysis. 
+
 doi: https://doi.org/10.2215/CJN.06740521
 
 Pulished in the Clinical Journal of the American Society of Nephrology (CJASN) in December 2021
