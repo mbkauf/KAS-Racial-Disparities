@@ -4,19 +4,19 @@
 capture log close
 clear all 
 set more off  
-global in_path = "/Volumes/Nephrology/Projects/UNOS/KrissbergJ"  // add "data" folder when files get organized
-global out_path = "/Volumes/Nephrology/Projects/UNOS/KrissbergJ/results"
-cd "/Volumes/Nephrology/Projects/UNOS/KrissbergJ"
+global in_path = ""  // Add file path to where clean data is stored
+global out_path = ""  // Add file path to where results are stored
+cd ""  // Add working directory
 pause on
 local date: display %tdCYND date(c(current_date), "DMY")
-log using "$in_path/logs/t2tx_v3_`date'.log", text replace 
+log using "$in_path/logs/t2tx_`date'.log", text replace 
 *--------------------------------------------------
 
 /*
 Racial Disparities in Pediatric Kidney Transplants
 Goal: Set up data for survival analyses, examine KM curves, and run models
 Date Created: 07/17/2020
-Last Updated: 12/04/2020
+Last Updated: 08/03/2021
 
 This following is for the time on dialysis to deceased donor transplant equation. For this equation, we have the
     following sections:
@@ -28,8 +28,7 @@ This following is for the time on dialysis to deceased donor transplant equation
     2) Time from dialysis  
       a) Kaplan-Meier Curves
       b) AFT Models
-	
-Update MK (07/01/2021): Revisions have asked us to examine interaction
+    3) Time to Graft Loss
 */
 	
 *--------------------------------------------------
@@ -112,7 +111,7 @@ stsum if kas==0, by(race_ethnic)
 stsum if kas==1, by(race_ethnic)
  
 
-* 1d) AFT Models 
+* 1c) AFT Models 
 *--------------------------------------------------
 * Run models by era
 *--------------------------------------------------
@@ -272,7 +271,7 @@ stsum if kas==0, by(race_ethnic)
 stsum if kas==1, by(race_ethnic)
  
 
-* 2c) Cox Models
+* 2c) AFT Models
 *--------------------------------------------------
 * Run models by era
 *--------------------------------------------------
@@ -379,7 +378,7 @@ gen days_to_censor = tfl_graft_dt - rec_tx_dt
     replace days_to_censor = tfl_lafudate - rec_tx_dt if days_to_censor == . 
     replace days_to_censor = can_endwlfu - rec_tx_dt if days_to_censor == .                                                    
 
-// Allow for up to 5 years of follow-up. Should we do 3?
+// Allow for up to 5 years of follow-up.
 stset days_to_censor, failure(graft_loss==1) id(pers_id) // exit(time 1825)   
 
 // White log-rank test and KM curves
